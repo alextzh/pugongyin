@@ -9,10 +9,18 @@ const user = {
     wrongNum: 5, // 手势密码错误次数
     step: 0, // 设置手势密码第几步
     isLogin: false, // 是否首次登陆
-    machineNum: '123456', // 设备uuid
-    errorMsg: '' // 校验错误信息
+    machineNum: '', // 设备uuid
+    errorMsg: '', // 校验错误信息
+    modifyState: 0,
+    routerQuery: '' // 跳转登录历史页路径
   },
   mutations: {
+    SET_ROUTER_QUERY: (state, str) => {
+      state.routerQuery = str
+    },
+    SET_MODIFY_STATE: (state, num) => {
+      state.modifyState = num
+    },
     SET_ERROR_MSG: (state, msg) => {
       state.errorMsg = msg
     },
@@ -32,10 +40,10 @@ const user = {
     },
     SET_PASSWORD: (state, password) => {
       state.password = password
+      localStorage.setItem('password', password)
     },
     DEL_PASSWORD: (state, password) => {
       state.password = password
-      localStorage.removeItem('passwordxx')
     },
     SET_WRONG_NUM: (state, num) => {
       state.wrongNum = num

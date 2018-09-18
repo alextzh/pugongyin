@@ -2,24 +2,24 @@
   <div class="capital">
     <home-title content="我的资产"></home-title>
     <div class="card-list">
-      <div class="card-box">
+      <div class="card-box" @click="toAssertDetail">
         <div class="card">
           <div class="media">
             <i class="iconfont icon-moneybag"></i>
           </div>
           <div class="txt">
-            <p class="arm"><span>{{allAsset}}</span>(DDO)</p>
+            <p class="arm"><span>{{formatAllAsset}}</span>(DDO)</p>
             <p class="tit">累计收益</p>
           </div>
         </div>
       </div>
-      <div class="card-box">
+      <div class="card-box" @click="toAssertDetail">
         <div class="card">
           <div class="media">
             <i style="font-size: 0.65rem" class="iconfont icon-money"></i>
           </div>
           <div class="txt">
-            <p class="arm"><span>{{dayAsset}}</span>(DDO)</p>
+            <p class="arm"><span>{{formatdayAsset}}</span>(DDO)</p>
             <p class="tit">今日收益</p>
           </div>
         </div>
@@ -38,10 +38,23 @@ export default {
     HomeTitle
   },
   computed: {
+    formatAllAsset() {
+      return this.allAsset > 9999 ? Math.round((this.allAsset / 10000) * 100) / 100 + '万' : this.allAsset
+    },
+    formatdayAsset() {
+      return this.dayAsset > 9999 ? Math.round((this.dayAsset / 10000) * 100) / 100 + '万' : this.dayAsset
+    },
     ...mapGetters([
       'allAsset',
       'dayAsset'
     ])
+  },
+  methods: {
+    toAssertDetail() {
+      this.$router.push({
+        path: '/assetDetail'
+      })
+    }
   }
 }
 </script>

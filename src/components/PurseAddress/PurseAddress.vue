@@ -1,6 +1,6 @@
 <template>
   <div class="purse-address">
-    <m-header text="钱包地址" :showBack="showBack" :showIcon="showIcon" icon="icon-forward" @back="handleBack" @handleClick="handleIcon"></m-header>
+    <m-header text="钱包地址" :showBack="showBack" @back="handleBack"></m-header>
     <div class="container">
       <cube-scroll>
         <div class="box">
@@ -13,6 +13,7 @@
             <div class="weixin">
               <img :src="qrUrl" alt="">
             </div>
+            <vue-qr style="display:none" :text="message" :callback="test" :size="215" :margin="15" colorDark="#fe7527"></vue-qr>
             <a class="copy" href="javascript:;" @click="doCopy">复制钱包地址</a>
           </div>
         </div>
@@ -23,31 +24,29 @@
 
 <script>
 import MHeader from 'base/MHeader'
-import QRCode from 'qrcode'
-import {mapGetters} from 'vuex'
+import VueQr from 'vue-qr'
 
 export default {
   name: 'PurseAddress',
   components: {
-    MHeader
+    MHeader,
+    VueQr
   },
   data() {
     return {
       showBack: true,
-      showIcon: true,
+      avatar: '',
       message: '0xaDDOaj28348190240192183ac2842710',
       qrUrl: ''
     }
-  },
-  computed: {
-    ...mapGetters([
-      'avatar'
-    ])
   },
   mounted() {
     this.getWalletAddress()
   },
   methods: {
+    test(dataUrl) {
+      this.qrUrl = dataUrl
+    },
     doCopy() {
       const vm = this
       this.$copyText(this.message).then(function(e) {
@@ -62,31 +61,19 @@ export default {
     },
     // 获取钱包地址
     getWalletAddress() {
-      var that = this
       this.$store.dispatch('GetWalletAddress').then(res => {
         if (res.code === 0) {
           this.$toast(res.msg, 'warn')
           return
         }
         const result = res.result
+        this.message = result.walletAddress ? result.walletAddress : ''
+        this.avatar = result.profilePic
         this.message = result.walletAddress
-        that.qrcode(result.walletAddress)
       }).catch(err => {
         console.log(err)
         this.$toast('获取钱包地址失败', 'error')
       })
-    },
-    qrcode(address) {
-      QRCode.toDataURL(address)
-        .then(url => {
-          this.qrUrl = url
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    handleIcon() {
-      console.log('分享')
     }
   }
 }
@@ -136,6 +123,7 @@ export default {
         word-break: break-all;
         line-height: 1.2;
         margin-bottom: 0.7rem;
+        text-align: center
       .weixin
         box-sizing: border-box
         border: 1px solid #e8e8e8

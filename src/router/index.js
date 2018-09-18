@@ -7,6 +7,7 @@ Vue.use(Router)
 
 const router = new Router({
   // mode: 'history',
+  // base: '/app',
   linkActiveClass: 'active',
   routes: routes
 })
@@ -16,13 +17,24 @@ router.beforeEach((to, from, next) => {
     if (store.getters.isLogin) {
       next()
     } else {
-      next({
-        path: '/mobileLogin',
-        query: {redirect: to.fullPath}
-      })
+      if (store.getters.password && localStorage.getItem('passwordxx')) {
+        next({
+          path: '/login',
+          query: {redirect: to.fullPath}
+        })
+      } else {
+        next({
+          path: '/mobileLogin',
+          query: {redirect: to.fullPath}
+        })
+      }
     }
   } else {
-    next()
+    if (to.name === 'Community') {
+      next(false)
+    } else {
+      next()
+    }
   }
 })
 

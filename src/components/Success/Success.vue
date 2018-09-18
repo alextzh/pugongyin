@@ -1,9 +1,9 @@
 <template>
   <div class="success">
-    <div class="header">
+    <!-- <div class="header">
       <span class="close" v-show="showIcon" @click="closePage"><i class="iconfont icon-close-x"></i></span>
       <h1>登录成功</h1>
-    </div>
+    </div> -->
     <div class="box">
       <img class="image" src="../../common/image/login_success.jpg" alt="">
       <p class="tip1">登录成功</p>

@@ -3,10 +3,11 @@
     <m-header text="设置昵称" :showBack="showBack" @back="back"></m-header>
     <form class="form">
       <div class="input-field border-bottom-1px">
-        <input class="input" type="text" v-model="name" placeholder="请输入昵称">
+        <input class="input" type="text" v-model="name" placeholder="请输入昵称" @change="checkNickname">
         <span v-show="showClose" @click="clearInput" class="close"><i class="iconfont icon-closefill"></i></span>
       </div>
-      <a class="save" @click="saveNickname" href="javascript:;">保存</a>
+      <div class="error-msg" :style="errorMsg ? 'visibility: visible;opacity: 1' : 'visibility: hidden;opacity: 0'">{{errorMsg}}</div>
+      <a class="save" @click="saveNickname" href="javascript:;">确定</a>
     </form>
   </div>
 </template>
@@ -14,6 +15,7 @@
 <script>
 import MHeader from 'base/MHeader'
 import {mapGetters} from 'vuex'
+import Validate from 'common/js/validate'
 
 export default {
   name: 'EditNickname',
@@ -29,7 +31,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'nickname'
+      'nickname',
+      'errorMsg'
     ])
   },
   created() {
@@ -39,17 +42,22 @@ export default {
     back() {
       this.$router.back()
     },
+    checkNickname() {
+      Validate.checkNickname(this.name)
+    },
     clearInput() {
       this.showClose = false
       this.name = ''
     },
     saveNickname() {
-      this.$store.commit('SET_NICKNAME', this.name)
-      setTimeout(() => {
-        this.$router.push({
-          path: '/editInformation'
+      if (Validate.checkNickname(this.name)) {
+        this.$store.commit('SET_NICKNAME', this.name)
+        setTimeout(() => {
+          this.$router.replace({
+            path: '/editInformation'
+          })
         })
-      })
+      }
     }
   },
   watch: {
@@ -68,13 +76,12 @@ export default {
 @import '~common/stylus/variable'
 
 .form
-  padding: 0.44rem 0.24rem
+  padding: 1.32rem 0.24rem 0.44rem
   .input-field
     display: flex
     align-items: center
     justify-content: space-between
     height: 0.7rem
-    // border-bottom: 1px solid #e8e8e8
     .input
       flex: 1
       font-size: 0.32rem
@@ -87,6 +94,15 @@ export default {
       i 
         font-size: 0.24rem
         color: #949494
+  .error-msg
+    padding: 0 0.15rem
+    height: 0.8rem
+    display: flex
+    align-items: center
+    color: #cb1212
+    font-size: 0.24rem
+    visibility: hidden
+    opacity: 0
   .save
     display: block
     width: 3.16rem
@@ -98,7 +114,7 @@ export default {
     border-radius: 0.35rem
     font-size: 0.3rem
     color: $color-theme
-    background: #edf4fd
+    background: #fff1e9
     margin: 1.04rem auto
     &:active
       background: $color-theme

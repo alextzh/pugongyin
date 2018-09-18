@@ -4,7 +4,7 @@
       <home-title content="热门广告"></home-title>
     </div>
     <div class="ad-list">
-      <div v-if="items.length > 0" class="ad-item border-bottom-1px" v-for="item in items" :key="item.advertId" @click="toDetail(item.advertId)">
+      <div v-if="items.length > 0" class="ad-item border-bottom-1px" v-for="(item, index) in items" :key="item.advertId" @click="toDetail(item.advertId, index)">
         <div class="ad-title">
           <img class="image" :src="item.brandUrl" alt="">
           <h4 class="title">{{item.brandName}}</h4>
@@ -34,7 +34,8 @@ export default {
     }
   },
   methods: {
-    toDetail(id) {
+    toDetail(id, index) {
+      this.$store.commit('SET_ACTIVE_INDEX', index)
       this.$emit('toDetail', id)
     }
   }
@@ -53,8 +54,7 @@ export default {
     padding: 0 0.24rem
   .ad-list
     .ad-item
-      padding: 0.25rem 0.24rem 0.35rem
-      // border-bottom: 1px solid #e8e8e8
+      padding: 0 0.24rem
       &:last-child
         &.border-bottom-1px
           &::after
@@ -65,25 +65,25 @@ export default {
         flex-direction: row
         height: 0.5rem
         align-items: center
+        padding: 0.2rem 0 0.16rem
         .image
           display: inline-block
           width: 0.5rem
           height: 0.5rem
           border-radius: 50%
           background: rgba(0,0,0,.1)
-          margin-right: 0.1rem
+          border: 0
         .title
           flex: 1
-          font-size: 0.34rem
+          font-size: 0.32rem
           color: #666
+          padding: 0 0.2rem
+          no-wrap()
         .time
-          position: absolute
-          right: 0
-          bottom: 0
-          font-size: 0.2rem
+          font-size: 0.24rem
           color: #7b7b7b
+          padding: 0.1rem 0
       .ad-media
-        padding: 0.16rem 0
         width: 100%
         height: 2.38rem
         border-radius: 0.1rem
@@ -93,12 +93,13 @@ export default {
           height: 100%
           border: none 
           display: block
-          background: rgba(0,0,0,.1);
-          border-radius: 0.1rem;
+          background: rgba(0,0,0,.1)
+          border-radius: 0.1rem
       .ad-detail
         min-width: 0
-        font-size: 0.24rem
+        font-size: 0.28rem
         color: #444
+        padding: 0.16rem 0 0.2rem
         no-wrap()
 </style>
 

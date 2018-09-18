@@ -48,10 +48,6 @@ import Domain from 'common/js/domain'
 
 const sexArr = [
   {
-    text: '保密',
-    value: -1
-  },
-  {
     text: '男',
     value: 1
   },
@@ -149,7 +145,7 @@ export default {
         }
         this.$toast('修改成功', 'correct')
         setTimeout(() => {
-          this.$router.push({
+          this.$router.replace({
             path: '/mine'
           })
         }, 500)
@@ -206,7 +202,8 @@ export default {
             display: block
             width: 0.84rem
             height: 0.84rem
-            border-radius: 0.1rem
+            border-radius: 50%
+            border: 0
             overflow: hidden
       .link
         display: flex

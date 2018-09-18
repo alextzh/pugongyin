@@ -1,6 +1,6 @@
 <template>
   <div class="trade-record">
-    <m-header text="交易记录" :showBack="showBack" @back="back"></m-header>
+    <m-header text="提现记录" :showBack="showBack" @back="back"></m-header>
     <div class="container">
       <cube-scroll
         ref="scroll"
@@ -29,7 +29,7 @@
           </div>
         </template>
         <div v-show="items.length === 0 && noData">
-          <no-data content="暂无交易记录"></no-data>
+          <no-data content="暂无提现记录"></no-data>
         </div>
         <loading></loading>
       </cube-scroll>

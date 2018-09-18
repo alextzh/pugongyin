@@ -13,10 +13,11 @@ export function getHomeAdList() {
 /**
  * 广告详情接口
 */
-export function getAdDetail(advertId) {
+export function getAdDetail(data) {
   return request({
-    url: `/advert/app/details/${advertId}`,
-    method: 'get'
+    url: `/advert/app/details`,
+    method: 'post',
+    data
   })
 }
 
@@ -101,5 +102,47 @@ export function appAuthLogin(data) {
     url: `user/app/loginMining`,
     method: 'post',
     data
+  })
+}
+
+/**
+ * 获取奖励记录
+*/
+export function getWinningRecord() {
+  return request({
+    url: `campaignPrizeWin/app/myReward/${localStorage.getItem('userId')}`,
+    method: 'get'
+  })
+}
+
+/**
+ * 兑换奖励
+*/
+export function exchangeReward(data) {
+  return request({
+    url: `campaignPrizeWin/app/exchange`,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 是否中奖
+*/
+// export function isWinning(data) {
+//   return request({
+//     url: `campaignPrizeWin/app/winReward`,
+//     method: 'post',
+//     data
+//   })
+// }
+
+/**
+ * 是否中奖 advertId=1&userId=25
+*/
+export function isWinning(param) {
+  return request({
+    url: `campaignPrizeWin/app/useWinReward?advertId=${param.advertId}&userId=${param.userId}`,
+    method: 'post'
   })
 }

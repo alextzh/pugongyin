@@ -55,3 +55,27 @@ export function isWeiXin() {
     return false
   }
 }
+
+export function findIndex(ary, fn) {
+  if (ary.findIndex) {
+    return ary.findIndex(fn)
+  }
+  /* istanbul ignore next */
+  let index = -1
+  /* istanbul ignore next */
+  ary.some(function(item, i, ary) {
+    const ret = fn.call(this, item, i, ary)
+    if (ret) {
+      index = i
+      return ret
+    }
+  })
+  /* istanbul ignore next */
+  return index
+}
+
+// 获取字符串长度
+export function getStrLength(str) {
+  var cArr = str.match(/[^\x00-\xff]/ig)
+  return str.length + (cArr == null ? 0 : cArr.length)
+}

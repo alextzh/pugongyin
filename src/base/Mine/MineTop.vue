@@ -8,7 +8,7 @@
         <span class="right" @click="toEdit">编辑资料</span>
       </div>
       <div class="userinfo">
-        <div class="image">
+        <div class="image" @click="toEditInfo">
           <img :src="avatar" alt="">
         </div>
         <p class="name">{{nickname}}</p>
@@ -30,6 +30,11 @@ export default {
   },
   methods: {
     toEdit() {
+      this.$router.push({
+        path: '/editInformation'
+      })
+    },
+    toEditInfo() {
       this.$router.push({
         path: '/editInformation'
       })

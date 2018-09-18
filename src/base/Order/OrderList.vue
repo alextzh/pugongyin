@@ -1,13 +1,13 @@
 <template>
   <div class="box">
     <ul v-if="items.length > 0">
-      <li class="item" v-for="item in items" :key="item.orderId">
+      <li class="item border-bottom-1px" v-for="item in items" :key="item.orderId">
         <div class="title">
           <span class="orderNo">订单编号：{{item.orderNum}}</span>
           <span class="time">{{item.createTime}}</span>
         </div>
         <div class="content">
-          <img class="media" src="../../common/image/good.jpg" alt="">
+          <img class="media" :src="item.minImageUrl" alt="">
           <div class="desc">
             <span class="tit">{{item.goodsName}}</span>
             <span class="account">{{item.goodsPrice}} DDO</span>
@@ -37,8 +37,7 @@ export default {
 .box
   padding: 0 0.24rem
   .item
-    padding: 0.3rem 0
-    border-bottom: 1px solid #e8e8e8
+    padding-bottom: 0.3rem
     &:last-child
       border-bottom: 0
     .title
@@ -47,9 +46,11 @@ export default {
       justify-content: space-between
       color: #666666
       padding-bottom: 0.2rem
+      padding-top: 0.3rem
       .orderNo
         font-size: 0.26rem
         flex: 1
+        line-height: 0.3rem;
         no-wrap()
       .time
         font-size: 0.24rem

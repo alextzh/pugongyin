@@ -22,11 +22,11 @@
             </div>
           </div>
           <div class="error-msg" :style="errorMsg ? 'visibility: visible;opacity: 1' : 'visibility: hidden;opacity: 0'">{{errorMsg}}</div>
-          <input class="next" type="button" @click="sub" value="下一步">
+          <input class="next" type="button" @click="sub" value="登录">
         </form>
-        <div class="btn_area">
+        <!-- <div class="btn_area">
           <a class="btn" href="javascript:;" @click="toRegister">新用户注册</a>
-        </div>
+        </div> -->
       </div>
     </div>
   </transition>
@@ -38,24 +38,30 @@ import Validate from 'common/js/validate'
 import {mapGetters} from 'vuex'
 
 export default {
-  name: 'Register',
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      // 通过 `vm` 访问组件实例
-      if (vm.$store.getters.password) {
-        next('/login')
-      } else {
-        next()
-      }
-    })
-  },
+  name: 'MobileLogin',
+  // beforeRouteEnter(to, from, next) {
+  //   next(vm => {
+  //     // 通过 `vm` 访问组件实例
+  //     if (vm.$store.getters.password) {
+  //       next('/login')
+  //     } else {
+  //       next()
+  //     }
+  //   })
+  // },
   data() {
     return {
-      mobile: '', // 手机号
+      mobile: '',
       code: '', // 手机验证码
       show: true, // 是否显示倒计时
       count: '',
       timer: null
+    }
+  },
+  created() {
+    this.mobile = localStorage.getItem('mobile') ? localStorage.getItem('mobile') : ''
+    if (this.$route.query.redirect) {
+      this.$store.commit('SET_ROUTER_QUERY', this.$route.query.redirect)
     }
   },
   computed: {
@@ -104,11 +110,6 @@ export default {
         })
       }
     },
-    toRegister() {
-      this.$router.push({
-        path: '/register'
-      })
-    },
     sub() {
       const flag = Validate.checkMobile(this.mobile) && Validate.checkCode(this.code)
       if (flag) {
@@ -124,12 +125,29 @@ export default {
           const result = res.result
           this.$store.commit('SET_MOBILE', userInfo.phoneNo)
           this.$store.commit('SET_USERID', result.userId)
-          this.$toast('登录成功', 'correct')
-          setTimeout(() => {
-            this.$router.push({
-              path: '/home'
-            })
-          }, 500)
+          if (!result.newUser) {
+            this.$toast('登录成功', 'correct')
+            if (this.$route.query.redirect) {
+              setTimeout(() => {
+                this.$router.replace({
+                  path: this.$route.query.redirect
+                })
+              }, 500)
+            } else {
+              setTimeout(() => {
+                this.$router.replace({
+                  path: '/home'
+                })
+              }, 500)
+            }
+          } else {
+            this.$toast('注册成功', 'correct')
+            setTimeout(() => {
+              this.$router.replace({
+                path: '/perfectInfo'
+              })
+            }, 500)
+          }
         }).catch((err) => {
           console.log(err)
           this.$toast('登录失败', 'error')
@@ -246,7 +264,7 @@ export default {
       line-height: 0.7rem
       border: 0.02rem solid $color-theme
       border-radius: 50px
-      background: #edf4fd
+      background: #fff1e9
       color: $color-theme
       font-size: 0.3rem
       box-sizing: border-box
@@ -254,17 +272,6 @@ export default {
       &:active
         background: $color-theme
         color: #fff
-  .btn_area
-    display: flex;
-    justify-content: center;
-    margin-top: 2.6rem;
-    .btn
-      color: $color-theme
-      font-size: 0.28rem
-      letter-spacing: 1px
-      text-decoration: underline
-      &:active
-        opacity: 0.7
 </style>
 
 

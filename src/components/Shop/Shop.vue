@@ -1,6 +1,6 @@
 <template>
   <div>
-    <m-header text="商城"></m-header>
+    <m-header text="兑换"></m-header>
     <div class="list">
       <cube-scroll
         ref="scroll"

@@ -33,20 +33,23 @@
   }
 </script>
 
-<style lang="styl" scoped>
+<style lang="stylus" scoped>
+@import '~common/stylus/variable';
 
 .wrapper >>> .swiper-pagination-bullet{
   background: #ffffff;
   border-radius: 50%;
-  box-shadow: 0 0 7px rgba(0,0,0,.75);
+  box-shadow: 0 0 3px rgba(0,0,0,.75);
   opacity: 1;
+  width: 6px;
+  height: 6px;
 }
 
 .wrapper >>> .swiper-pagination-bullet-active{
-  width: 16px;
+  width: 12px;
   border-radius: 50px;
-  background: #1b82d1;
-  box-shadow: 0 0 7px rgba(27,130,209,1);
+  background: $color-theme;
+  box-shadow: 0 0 3px rgba(249,136,80,1);
 }
 
 .wrapper{

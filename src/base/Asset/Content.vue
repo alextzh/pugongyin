@@ -8,16 +8,17 @@
         <span>{{item.totalIncome}}</span>
       </div>
       <ul class="tr">
-        <li class="td">
+        <!-- <li class="td">
           <span class="top">充值收入</span>
           <span class="bottom">{{item.rechargeIncome}}</span>
-        </li>
-        <li class="td">
+        </li> -->
+        <li class="td" style="padding-left: 0;border-bottom: 0">
           <span class="top">挖矿收入</span>
           <span class="bottom">{{item.miningIncome}}</span>
         </li>
       </ul>
     </div>
+    <div style="height: 0.2rem;background: #e8e8e8;"></div>
     <div class="item">
       <div class="tit">
         <span class="left">总支出（DDO）</span>
@@ -31,7 +32,7 @@
           <span class="bottom">{{item.withdrawPay}}</span>
         </li>
         <li class="td">
-          <span class="top">购买支出</span>
+          <span class="top">兑换支出</span>
           <span class="bottom">{{item.shopPay}}</span>
         </li>
       </ul>
@@ -53,9 +54,11 @@ export default {
 
 <style lang="stylus" scoped>
 .asset-detail
-  padding: 0 0.24rem
+  .device
+    height: 0.2rem
+    background: #e8e8e8
   .item
-    padding-top: 0.3rem
+    padding: 0.24rem
     .tit
       display: flex
       justify-content: space-between

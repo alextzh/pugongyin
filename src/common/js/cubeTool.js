@@ -14,7 +14,7 @@ export function showToast(txt, type) {
     type: type,
     mask: true,
     txt: txt,
-    time: 1000
+    time: 2000
   }).show()
 }
 

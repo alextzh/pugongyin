@@ -132,7 +132,7 @@ export default {
         }
       }).catch(err => {
         console.log(err)
-        this.$toast('获取广告详情失败', 'error')
+        this.$toast('获取广告列表失败', 'error')
       })
     },
     // 上拉加载获取更多

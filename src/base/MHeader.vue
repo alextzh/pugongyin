@@ -50,7 +50,7 @@ export default {
 <style lang="stylus" scoped>
 @import "~common/stylus/variable"
 .header
-  position: relative
+  position: absolute
   width: 100%
   line-height: 0.88rem
   background: $color-theme
@@ -58,6 +58,7 @@ export default {
   text-align: center
   font-size: 0.36rem
   box-shadow: 0 0 5px $color-theme
+  z-index: 99
   .back
     position: absolute
     top: 0

@@ -13,7 +13,7 @@
           <span class="icon"><i class="iconfont icon-link"></i></span>
         </div>
       </li>
-      <li class="item" @click="toRecharge">
+      <!-- <li class="item" @click="toRecharge">
         <div class="media">
           <i class="iconfont icon-recharge" style="color:#2fa995"></i>
         </div>
@@ -21,10 +21,10 @@
           <h4>充值</h4>
           <span class="icon"><i class="iconfont icon-link"></i></span>
         </div>
-      </li>
+      </li> -->
       <li class="item" @click="toWithdraw">
         <div class="media">
-          <i class="iconfont icon-withdraw" style="color:#1b82d1"></i>
+          <i class="iconfont icon-withdraw" style="color:#d92a2a"></i>
         </div>
         <div class="content border-bottom-1px">
           <h4>提现</h4>
@@ -35,8 +35,17 @@
         <div class="media">
           <i class="iconfont icon-order" style="color:#f39f22"></i>
         </div>
-        <div class="content">
+        <div class="content border-bottom-1px">
           <h4>我的订单</h4>
+          <span class="icon"><i class="iconfont icon-link" style="font-size: 0.4rem"></i></span>
+        </div>
+      </li>
+      <li class="item" @click="toWinningRecord">
+        <div class="media">
+          <i class="iconfont icon-zhongjiangjilu" style="color:#d92a2a"></i>
+        </div>
+        <div class="content">
+          <h4>我的奖励</h4>
           <span class="icon"><i class="iconfont icon-link" style="font-size: 0.4rem"></i></span>
         </div>
       </li>
@@ -47,16 +56,16 @@
           <i class="iconfont icon-transactionRecord" style="color:#1b82d1"></i>
         </div>
         <div class="content border-bottom-1px">
-          <h4>交易记录</h4>
+          <h4>提现记录</h4>
           <span class="icon"><i class="iconfont icon-link"></i></span>
         </div>
       </li>
-      <li class="item" @click="toModifyPassword">
+      <li class="item" @click="toShouzhiRecord">
         <div class="media">
-          <i class="iconfont icon-modifyPwd" style="color:#d92a2a"></i>
+          <i class="iconfont icon-shouzhi" style="color:#d92a2a"></i>
         </div>
         <div class="content border-bottom-1px">
-          <h4>{{getText}}</h4>
+          <h4>收支记录</h4>
           <span class="icon"><i class="iconfont icon-link"></i></span>
         </div>
       </li>
@@ -69,6 +78,17 @@
             <span>钱包地址</span>
             <span class="arm"><i class="iconfont icon-qr"></i></span>
           </h4>
+          <span class="icon"><i class="iconfont icon-link"></i></span>
+        </div>
+      </li>
+    </ul>
+    <ul class="box">
+      <li class="item" @click="toSetting">
+        <div class="media">
+          <i class="iconfont icon-setting" style="color:#1b82d1"></i>
+        </div>
+        <div class="content">
+          <h4>设置</h4>
           <span class="icon"><i class="iconfont icon-link"></i></span>
         </div>
       </li>
@@ -90,27 +110,21 @@ export default {
     ])
   },
   methods: {
-    toModifyPassword() {
-      if (!this.$store.getters.password) {
-        this.$router.push({
-          path: '/setPassword'
-        })
-      } else {
-        this.$router.push({
-          path: '/resetPassword'
-        })
-      }
+    toShouzhiRecord() {
+      this.$router.push({
+        path: '/shouzhiRecord'
+      })
     },
     toAssertDetail() {
       this.$router.push({
         path: '/assetDetail'
       })
     },
-    toRecharge() {
-      this.$router.push({
-        path: '/recharge'
-      })
-    },
+    // toRecharge() {
+    //   this.$router.push({
+    //     path: '/recharge'
+    //   })
+    // },
     toWithdraw() {
       this.$router.push({
         path: '/withdraw'
@@ -129,6 +143,16 @@ export default {
     toPurseAddress() {
       this.$router.push({
         path: '/purseAddress'
+      })
+    },
+    toWinningRecord() {
+      this.$router.push({
+        path: '/winningRecord'
+      })
+    },
+    toSetting() {
+      this.$router.push({
+        path: '/setting'
       })
     }
   }

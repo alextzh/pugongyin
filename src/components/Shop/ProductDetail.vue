@@ -40,17 +40,28 @@ export default {
   data() {
     return {
       scrollY: 0,
-      isSuccess: false
+      isSuccess: false,
+      currentProduct: null
     }
   },
   created() {
     this.getProductDetail()
+    this.getAllAsset()
   },
   methods: {
     // 返回按钮
     back() {
-      this.$router.push({
-        path: '/shop'
+      this.$router.back()
+    },
+    // 获取资产总额
+    getAllAsset() {
+      this.$store.dispatch('GetAllAsset').then(res => {
+        if (res.code === 0) {
+          this.$toast(res.msg, 'warn')
+          return
+        }
+      }).catch(err => {
+        console.log(err)
       })
     },
     // 获取商品详情
@@ -60,6 +71,7 @@ export default {
           this.$toast(res.msg, 'warn')
           return
         }
+        this.currentProduct = res.result
       }).catch(err => {
         console.log(err)
         this.$toast('获取商品详情失败', 'error')
@@ -69,7 +81,7 @@ export default {
     closeTip() {
       this.isSuccess = false
       setTimeout(() => {
-        this.$router.push({
+        this.$router.replace({
           path: '/shop'
         })
       }, 500)
@@ -86,15 +98,23 @@ export default {
         userId: localStorage.getItem('userId'),
         goodsId: this.id
       }
-      this.$store.dispatch('SubmitProductDetail', data).then(res => {
-        if (res.code === 0) {
-          this.$toast(res.msg, 'warn')
-          return
-        }
-        this.isSuccess = true
-      }).catch(err => {
-        console.log(err)
-        this.$toast('购买商品失败', 'error')
+      if (this.currentProduct.goodsPrice > this.$store.getters.allAsset) {
+        this.$alert('还差一点点，请继续加油挖金哦')
+        return
+      }
+      this.$dialog('提示', `确定要兑换该商品吗`, () => {
+        this.$store.dispatch('SubmitProductDetail', data).then(res => {
+          if (res.code === 0) {
+            this.$toast(res.msg, 'warn')
+            return
+          }
+          this.isSuccess = true
+        }).catch(err => {
+          console.log(err)
+          this.$toast('兑换商品失败', 'error')
+        })
+      }, () => {
+        return false
       })
     }
   },
@@ -109,12 +129,12 @@ export default {
         this.$refs.title.style.opacity = 0
       } else if (newVal > 197) {
         percent = 1
-        this.$refs.head.style.background = `rgba(27,130,209,1)`
+        this.$refs.head.style.background = `rgba(254,117,39,1)`
         this.$refs.head.style.color = '#fff'
         this.$refs.title.style.opacity = 1
       } else {
         percent = newVal / 197
-        this.$refs.head.style.background = `rgba(27,130,209,${percent})`
+        this.$refs.head.style.background = `rgba(254,117,39,${percent})`
         this.$refs.head.style.color = '#fff'
         this.$refs.title.style.opacity = percent
       }
@@ -145,7 +165,7 @@ export default {
       height: 6.14rem
       background: #ff0000
       border-radius: 0.1rem
-      background: url(../../common/image/success.jpg) no-repeat center center
+      background: url(../../common/image/success.png) no-repeat center center
       background-size: cover
       .action
         position: absolute 

@@ -28,6 +28,9 @@
             <p class="tip">请填写您需要提现的DDO数量，我们工作人员会在24小时内与您取得联系。</p>
           </div>
         </div>
+        <div class="legend">
+          <p>DDO是您的数字资产，基于国内政策法规要求，暂时不能直接兑换成人民币，您可提现到您的数字钱包，或在app中兑换成商品。想要了解更多数字钱包内容，可到token.im浏览。</p>
+        </div>
       </div>
     </div>
   </transition>
@@ -133,7 +136,7 @@ export default {
 @import '~common/stylus/variable'
 
 .box
-  padding: 0.36rem 0.24rem
+  padding: 1.24rem 0.24rem 0.36rem
   .card
     border-radius: 0.1rem
     box-shadow: 0 3px 10px rgba(0,0,0,.36)
@@ -198,7 +201,7 @@ export default {
           display: inline-block
           padding: 0.24rem 0
           font-size: 0.22rem
-          color: #1b82d1
+          color: $color-theme
       .remark
         display: flex
         align-items: center
@@ -224,4 +227,10 @@ export default {
         font-size: 0.24rem
         line-height: 1.5
         color: #b9b9b9
+  .legend
+    padding: 0.3rem 0.24rem
+    p
+      font-size: 0.28rem;
+      line-height: 1.5;
+      color: $color-theme;
 </style>

@@ -90,7 +90,7 @@ export default {
         color: #6e6e6e
         text-align: center
         span 
-          color: $color-theme
+          color: #db2048
       .price
         padding-top: 0.1rem
         font-size: 0.2rem

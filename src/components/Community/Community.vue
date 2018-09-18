@@ -1,7 +1,7 @@
 <template>
   <div class="community">
     <header class="header">
-      <span class="publish">发布</span>
+      <span class="publish" @click="handlePublish">发布</span>
       <span>社区</span>
     </header>
     <div class="container">
@@ -21,6 +21,11 @@ export default {
   components: {
     MHeader,
     CommunityList
+  },
+  methods: {
+    handlePublish() {
+      this.$alert('该功能暂未开放，敬请期待')
+    }
   }
 }
 </script>
@@ -38,6 +43,8 @@ export default {
   font-size: 0.36rem
   background: $color-theme
   color: #fff
+  box-shadow: 0 0 5px $color-theme
+  z-index: 99
   .publish
     position: absolute 
     top: 0

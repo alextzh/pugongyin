@@ -2,8 +2,10 @@
   <transition name="fade">
     <div class="assetDetail">
       <m-header text="资产" :showBack="showBack" @back="handleBack"></m-header>
-      <asset-top :item="assetDetail"></asset-top>
-      <asset-content :item="assetDetail"></asset-content>
+      <div class="box">
+        <asset-top :item="assetDetail"></asset-top>
+        <asset-content :item="assetDetail"></asset-content>
+      </div>
     </div>
   </transition>
 </template>
@@ -52,5 +54,11 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
+.box
+  position: absolute 
+  top: 0.88rem
+  left: 0
+  right: 0
+  bottom: 0
+  overflow hidden
 </style>

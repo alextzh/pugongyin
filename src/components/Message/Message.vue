@@ -1,42 +1,40 @@
 <template>
-  <transition name="fade">
-    <div class="message">
-      <m-header :showBack="showBack" @back="back" text="消息"></m-header>
-      <div class="list">
-        <cube-scroll
-          ref="scroll"
-          :data="items"
-          :options="options"
-          @pulling-down="onPullingDown"
-        >
-          <message-list :items="items"></message-list>
-          <template slot="pulldown" slot-scope="props">
-            <div v-if="props.pullDownRefresh"
-              class="cube-pulldown-wrapper"
-              :style="props.pullDownStyle">
-              <div v-if="props.beforePullDown"
-                class="before-trigger"
-                :style="{paddingTop: props.bubbleY + 'px'}">
-                <span :class="{rotate: props.bubbleY > 0}">↓</span>
-              </div>
-              <div class="after-trigger" v-else>
-                <div v-show="props.isPullingDown" class="loading">
-                  <cube-loading></cube-loading>
-                </div>
-                <transition name="success">
-                  <div v-show="!props.isPullingDown" class="text-wrapper"><span class="refresh-text">更新完成</span></div>
-                </transition>
-              </div>
+  <div class="message">
+    <m-header :showBack="showBack" @back="back" text="消息"></m-header>
+    <div class="list">
+      <cube-scroll
+        ref="scroll"
+        :data="items"
+        :options="options"
+        @pulling-down="onPullingDown"
+      >
+        <message-list :items="items"></message-list>
+        <template slot="pulldown" slot-scope="props">
+          <div v-if="props.pullDownRefresh"
+            class="cube-pulldown-wrapper"
+            :style="props.pullDownStyle">
+            <div v-if="props.beforePullDown"
+              class="before-trigger"
+              :style="{paddingTop: props.bubbleY + 'px'}">
+              <span :class="{rotate: props.bubbleY > 0}">↓</span>
             </div>
-          </template>
-          <div v-show="items.length === 0 && noData">
-            <no-data content="暂无消息记录"></no-data>
+            <div class="after-trigger" v-else>
+              <div v-show="props.isPullingDown" class="loading">
+                <cube-loading></cube-loading>
+              </div>
+              <transition name="success">
+                <div v-show="!props.isPullingDown" class="text-wrapper"><span class="refresh-text">更新完成</span></div>
+              </transition>
+            </div>
           </div>
-          <loading></loading>
-        </cube-scroll>
-      </div>
+        </template>
+        <div v-show="items.length === 0 && noData">
+          <no-data content="暂无消息记录"></no-data>
+        </div>
+        <loading></loading>
+      </cube-scroll>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>
@@ -76,7 +74,7 @@ export default {
   methods: {
     // 返回首页
     back() {
-      this.$router.push({
+      this.$router.replace({
         path: '/home'
       })
     },

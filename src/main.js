@@ -7,14 +7,18 @@ import {showToast, showAlert, showDialog, showPicker} from 'common/js/cubeTool'
 import fastclick from 'fastclick'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueClipboard from 'vue-clipboard2'
+import svgBar from 'svg-progress-bar'
 import {
   /* eslint-disable no-unused-vars */
   Style,
+  TabBar,
   Toast,
   Picker,
   Dialog,
+  Slide,
   Scroll,
-  createAPI
+  createAPI,
+  ScrollNav
 } from 'cube-ui'
 
 import 'swiper/dist/css/swiper.css'
@@ -24,7 +28,10 @@ fastclick.attach(document.body)
 
 Vue.use(VueAwesomeSwiper)
 Vue.use(VueClipboard)
+Vue.use(svgBar, {componentName: 'percent-btn'})
 
+Vue.use(Slide)
+Vue.use(TabBar)
 Vue.use(Toast)
 Vue.use(Picker)
 Vue.use(Dialog)
@@ -39,12 +46,10 @@ Vue.prototype.$picker = showPicker
 Vue.config.productionTip = false
 
 /* eslint-disable */
-document.addEventListener('deviceready', function() {
-  new Vue({
-    el: '#app',
-    router,
-    store,
-    render: h => h(App)
-  })
-  window.navigator.splashscreen.hide()
-}, false)
+new Vue({
+  el: '#app',
+  router,
+  store,
+  render: h => h(App)
+})
+

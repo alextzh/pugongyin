@@ -10,6 +10,7 @@ const SetMobile = () => import('components/Register/SetMobile')
 const Register = () => import('components/Register/Register')
 const SetPassword = () => import('components/Register/SetPassword')
 const ResetPassword = () => import('components/Register/ResetPassword')
+const SetGesture = () => import('components/SetGesture/SetGesture')
 const Message = () => import('components/Message/Message')
 const AdDetail = () => import('components/Ad/AdDetail')
 const AssetDetail = () => import('components/Asset/AssetDetail')
@@ -19,9 +20,15 @@ const ProductDetail = () => import('components/Shop/ProductDetail')
 const EditInformation = () => import('components/Mine/EditInformation')
 const EditNickname = () => import('components/Mine/EditNickname')
 const TradeRecord = () => import('components/TradeRecord/TradeRecord')
+const ShouzhiRecord = () => import('components/ShouzhiRecord/ShouzhiRecord')
+const Winning = () => import('components/Winning/Winning')
+const WinningRecord = () => import('components/WinningRecord/WinningRecord')
 const MyOrder = () => import('components/MyOrder/MyOrder')
 const PurseAddress = () => import('components/PurseAddress/PurseAddress')
 const Layout = () => import('components/Layout/Layout')
+const Setting = () => import('components/Setting/Setting')
+const VertifyCode = () => import('components/VertifyCode/VertifyCode')
+const PerfectInfo = () => import('components/PerfectInfo/PerfectInfo')
 const Expired = () => import('components/Expired/Expired')
 const Success = () => import('components/Success/Success')
 const AuthLogin = () => import('components/AuthLogin/AuthLogin')
@@ -129,6 +136,11 @@ export default [
     component: ResetPassword
   },
   {
+    path: '/setGesture',
+    name: 'SetGesture',
+    component: SetGesture
+  },
+  {
     path: '/message',
     name: 'Message',
     meta: {
@@ -203,6 +215,30 @@ export default [
     component: TradeRecord
   },
   {
+    path: '/shouzhiRecord',
+    name: 'ShouzhiRecord',
+    meta: {
+      requireAuth: true
+    },
+    component: ShouzhiRecord
+  },
+  {
+    path: '/winning',
+    name: 'Winning',
+    meta: {
+      requireAuth: true
+    },
+    component: Winning
+  },
+  {
+    path: '/winningRecord',
+    name: 'WinningRecord',
+    meta: {
+      requireAuth: true
+    },
+    component: WinningRecord
+  },
+  {
     path: '/myOrder',
     name: 'MyOrder',
     meta: {
@@ -217,6 +253,24 @@ export default [
       requireAuth: true
     },
     component: PurseAddress
+  },
+  {
+    path: '/setting',
+    name: 'Setting',
+    meta: {
+      requireAuth: true
+    },
+    component: Setting
+  },
+  {
+    path: '/vertifyCode',
+    name: 'VertifyCode',
+    component: VertifyCode
+  },
+  {
+    path: '/perfectInfo',
+    name: 'PerfectInfo',
+    component: PerfectInfo
   },
   {
     path: '/expired',

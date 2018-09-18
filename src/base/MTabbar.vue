@@ -3,11 +3,11 @@
     <div class="mid-bg"></div>
     <div class="tabbar-bg"></div>
     <div class="tabbar">
-      <router-link :to="{name: 'Home'}" exact tag="div" class="item">
+      <router-link :to="{name: 'Home'}" exact replace tag="div" class="item">
         <span class="icon"><i class="iconfont " :class="$route.name === 'Home' ? 'icon-homefill' : 'icon-home'"></i></span>
         <p class="title">首页</p>
       </router-link>
-      <router-link :to="{name: 'Community'}" exact tag="div" class="item">
+      <router-link :to="{name: 'Community'}" exact replace tag="div" @click.native="handleClick" class="item">
         <span class="icon"><i class="iconfont " :class="$route.name === 'Community' ? 'icon-communityfill' : 'icon-community'"></i></span>
         <p class="title">社区</p>
       </router-link>
@@ -17,13 +17,13 @@
             <img src="../common/image/mining.png" alt="">
           </div>
         </div>
-        <p class="title">挖矿</p>
+        <p class="title">挖金</p>
       </div>
-      <router-link :to="{name: 'Shop'}" exact tag="div" class="item">
+      <router-link :to="{name: 'Shop'}" exact replace tag="div" class="item">
         <span class="icon"><i class="iconfont " :class="$route.name === 'Shop' ? 'icon-shopfill' : 'icon-shop'"></i></span>
-        <p class="title">商城</p>
+        <p class="title">兑换</p>
       </router-link>
-      <router-link :to="{name: 'Mine'}" exact tag="div" class="item">
+      <router-link :to="{name: 'Mine'}" exact replace tag="div" class="item">
         <span class="icon"><i class="iconfont " :class="$route.name === 'Mine' ? 'icon-myfill' : 'icon-my'"></i></span>
         <p class="title">我的</p>
       </router-link>
@@ -36,39 +36,17 @@
 export default {
   name: 'MTabbar',
   methods: {
+    handleClick() {
+      this.$alert('该功能暂未开放，敬请期待')
+    },
     callCamera() {
-      console.log('扫码')
-      // window.toastandroid.openCamera()
-      // window.scan.openCamera()
       if (!this.$store.getters.isLogin) {
         this.$router.push({
           path: '/mobileLogin'
         })
         return false
       }
-      var me = this
-      cordova.plugins.barcodeScanner.scan((result) => {
-        let str = result.text
-        if (str && str.indexOf('advertId') >= 0 && str.indexOf('machineNum') >= 0) {
-          let arr = str.split('&')
-          let advertId = arr[0].split('=')[1]
-          let machineNum = arr[1].split('=')[1]
-          me.$store.commit('SET_MACHINE_NUM', machineNum)
-          me.$router.push({
-            path: `/ad/${advertId}`
-          })
-        }
-        if (str && str.indexOf('machineNum') >= 0 && str.indexOf('advertId') < 0) {
-          let arr = str.split('=')
-          let machineNum = arr[1]
-          me.$store.commit('SET_MACHINE_NUM', machineNum)
-          me.$router.push({
-            path: '/autnLogin'
-          })
-        }
-      }, (error) => {
-        console.log(error)
-      })
+      this.$emit('callCamera')
     }
   }
 }
@@ -138,7 +116,8 @@ export default {
           align-items: center;
           justify-content: center;
           top: -0.5rem;
-          left: 0.35rem;
+          left: 50%;
+          margin-left: -0.4rem;
           img
             width: 0.55rem
             height: 0.55rem

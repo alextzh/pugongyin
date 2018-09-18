@@ -9,7 +9,7 @@
 /* eslint-disable */
 import {getPwd} from 'common/js/tool'
 
-const THEME_COLOR = '#5394e9'
+const THEME_COLOR = '#fe7527'
 
 export default {
   name: 'Guesture',
@@ -164,7 +164,7 @@ export default {
           let gesturePwd = getPwd(psw)
           let userInfo = {
             userPassword: gesturePwd,
-            userId: localStorage.userId
+            userId: localStorage.getItem('userId')
           }
           this.$store.dispatch('UpdateGesture', userInfo).then((res) => {
             if (res.code === 0) {
@@ -175,11 +175,7 @@ export default {
             localStorage.setItem('passwordxx', JSON.stringify(this.pswObj.spassword))
             this.pswObj.step = 2;
             this.domStyle('#698B22', '密码保存成功')
-            setTimeout(() => {
-              this.$router.push({
-                path: '/login'
-              })
-            }, 500)
+            this.$emit('onSuccess')
           }).catch(err => {
             console.log(err)
             this.$toast('网络异常', 'error')
@@ -189,6 +185,7 @@ export default {
           delete this.pswObj.step;
         }
       } else if (this.pswObj.step == 2) {
+        //TODO
         if (this.checkPass(this.pswObj.spassword, psw)) {
           let gesturePwd = getPwd(psw)
           let userInfo = {
@@ -203,11 +200,7 @@ export default {
             const result = res.result
             this.$store.commit('SET_USERID', result.userId)
             this.domStyle('#698B22', '解锁成功')
-            setTimeout(() => {
-              this.$router.push({
-                path: '/home'
-              })
-            }, 500)
+            this.$emit('onUnLock')
           }).catch(err => {
             console.log(err)
             this.$toast('网络异常', 'error')
@@ -289,7 +282,7 @@ export default {
 
     // 重置手势密码
     updatePassword() {
-      this.$store.commit('DEL_PASSWORD', '')
+      window.localStorage.removeItem('passwordxx')
       window.localStorage.removeItem('chooseType');
       window.localStorage.removeItem('wrongNum');
       this.pswObj = {};
@@ -297,11 +290,6 @@ export default {
       var gestureTitle = this.$refs.gestureTitle
       gestureTitle.style.color = "#666";
       gestureTitle.innerHTML = '';
-      setTimeout(() => {
-        this.$router.push({
-          path: '/resetPassword'
-        })
-      })
     },
 
     // 设置初始类型

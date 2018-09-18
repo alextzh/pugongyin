@@ -63,6 +63,7 @@ export default {
         display: flex
         justify-content: space-between
         padding-bottom: 0.2rem
+        padding-top: 0.1rem
         .tit
           font-size: 0.3rem
           color: #444444

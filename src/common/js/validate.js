@@ -1,4 +1,4 @@
-import {isMobile, isNum} from 'common/js/tool'
+import {isMobile, isNum, getStrLength} from 'common/js/tool'
 import {showAlert} from 'common/js/cubeTool'
 import store from '../../store/'
 
@@ -36,12 +36,12 @@ const Validate = {
   */
   checkNickname: (param) => {
     const nickname = param.trim()
+    const length = getStrLength(nickname)
     if (!nickname) {
       store.commit('SET_ERROR_MSG', '请输入昵称')
       return false
-    } else if (nickname.length > 20) {
-      store.commit('SET_ERROR_MSG', '昵称长度小于20个字符')
-      showAlert('昵称长度小于20个字符')
+    } else if (length > 20 || length < 2) {
+      store.commit('SET_ERROR_MSG', '昵称长度必须满足2-20个字符')
       return false
     }
     store.commit('SET_ERROR_MSG', '')

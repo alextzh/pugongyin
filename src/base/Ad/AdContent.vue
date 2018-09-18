@@ -4,17 +4,12 @@
       <img class="avatar" :src="currentAd.brandUrl" alt="">
       <div class="info">
         <p class="tit">{{currentAd.brandName}}</p>
-        <p class="num">观看<span>{{currentAd.plays}}</span>次</p>
+        <p class="num">观看<span>{{plays}}</span>次</p>
       </div>
       <span class="time">{{currentAd.createTime}}</span>
     </div>
     <div class="img-box">
       <img :src="currentAd.contentUrl" alt="">
-      <span v-show="!flag" class="countdown">{{time}}s</span>
-    </div>
-    <div class="con">
-      <p class="txt">公司地址：{{currentAd.address}}</p>
-      <p>联系电话：{{currentAd.telephone}}</p>
     </div>
   </div>
 </template>
@@ -24,38 +19,16 @@ import {mapGetters} from 'vuex'
 
 export default {
   name: 'AdContent',
-  data() {
-    return {
-      time: 5,
-      flag: false
+  props: {
+    plays: {
+      type: Number,
+      default: 0
     }
   },
   computed: {
     ...mapGetters([
       'currentAd'
     ])
-  },
-  mounted() {
-    setTimeout(() => {
-      this.autoRun()
-    }, 1000)
-  },
-  methods: {
-    autoRun() {
-      this.run()
-    },
-    run() {
-      if (this.time > 0) {
-        this.flag = false
-        this.$store.commit('SET_FLAG', false)
-        this.time--
-        this.$emit('timeLeft', this.time)
-        setTimeout(this.run, 1000)
-      } else {
-        this.flag = true
-        this.$store.commit('SET_FLAG', true)
-      }
-    }
   }
 }
 </script>
@@ -97,24 +70,5 @@ export default {
     img 
       display: block
       width: 100%
-    .countdown
-      position: absolute 
-      right: 0.3rem
-      top: 0.25rem
-      width: 0.5rem
-      height: 0.5rem
-      line-height: 0.5rem
-      text-align: center
-      background: #545455
-      font-size: 0.24rem
-      color: #fff
-      border-radius: 50%
-  .con
-    padding: 0.3rem 0
-    p
-      font-size: 0.26rem
-      color: #666
-    .txt
-      padding-bottom: 0.15rem
 </style>
 

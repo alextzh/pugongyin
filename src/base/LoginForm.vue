@@ -197,7 +197,7 @@ export default {
     line-height: 0.7rem
     border: 0.02rem solid $color-theme
     border-radius: 50px
-    background: #edf4fd
+    background: #fff1e9
     color: $color-theme
     font-size: 0.3rem
     box-sizing: border-box

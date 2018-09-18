@@ -39,12 +39,15 @@ export default {
       'userId'
     ])
   },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('SET_MACHINE_NUM', '')
+    next()
+  },
   methods: {
     // 返回
     back() {
-      this.$router.push({
-        path: '/'
-      })
+      this.$store.commit('SET_MACHINE_NUM', '')
+      this.$router.back()
     },
     // 授权登录
     canLogin() {
@@ -58,16 +61,15 @@ export default {
           return
         }
         this.$toast('登录成功', 'correct')
-        this.$router.push({
-          path: '/'
+        this.$router.replace({
+          path: '/home'
         })
       })
     },
     // 取消登录
     cancelLogin() {
-      this.$router.push({
-        path: '/'
-      })
+      this.$store.commit('SET_MACHINE_NUM', '')
+      this.$router.back()
     },
     // 获取用户信息
     getUserInfo() {

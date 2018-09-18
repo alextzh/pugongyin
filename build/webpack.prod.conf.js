@@ -12,6 +12,7 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const env = require('../config/prod.env')
+// var Version = new Date().getTime()
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {

@@ -35,27 +35,28 @@ export default {
     display: flex
     flex-direction: row
     align-items: center
-    height: 0.9rem
+    min-height: 0.9rem
     padding: 0 0.23rem
-    // border-bottom: 1px solid #e8e8e8
     box-sizing: border-box
+    line-height: 1.5
     .icon
       width: 0.28rem
-      height: 0.9rem
       padding-right: 0.15rem
       display: flex
       align-items: center
       i 
         font-size: 0.32rem;
-        margin-top: -3px;
     .content
       flex: 1
+      display: flex
+      align-items: center
       font-size: 0.28rem
       color: #444
-      no-wrap()
+      width: 100%;
+      padding: 0.1rem 0;
     .time
       display: inline-block
-      padding: 0
+      padding-left: 0.1rem
       font-size: 0.24rem
       color: #9a9a9a
 </style>

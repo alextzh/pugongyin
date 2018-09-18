@@ -1,66 +1,121 @@
 <template>
-  <transition name="fade">
-    <div class="ad-detail">
-      <m-header text="广告详情" :showBack="showBack" :showIcon="showIcon" icon="icon-forward" @back="handleBack" @handleClick="handleIcon"></m-header>
-      <div class="content">
-        <cube-scroll
-          ref="scroll"
-          :scroll-events="['before-scroll-start']"
-          @before-scroll-start="onBeforeScrollHandle"
-        >
-          <ad-content @timeLeft="timeLeft"></ad-content>
-        </cube-scroll>
-      </div>
-      <div class="btn" @click="submitAdDetail">提交</div>
-      <div class="mask" v-if="showTip">
-        <div class="tip-box">
-          <p class="context">挖矿成功！获得 {{profit}} DDO</p>
-        </div>
-        <a class="button" href="javascript:;" @click="closeTip">确定</a>
-      </div>
+  <div class="ad-detail">
+    <m-header text="广告详情" :showBack="showBack" @back="handleBack"></m-header>
+    <div class="content">
+      <cube-scroll
+        ref="scroll"
+        :scroll-events="['before-scroll-start']"
+        @before-scroll-start="onBeforeScrollHandle"
+      >
+        <ad-content :plays="plays"></ad-content>
+      </cube-scroll>
     </div>
-  </transition>
+    <div class="btn" v-if="btnType === 1">
+      <percent-btn :value="timer" type="rect" :options="options"></percent-btn>
+    </div>
+    <div class="btn-disabled" v-show="!flag"></div>
+    <div class="btn" v-if="btnType === 3">
+      <input style="background: #e8e8e8" class="input-btn" :value="btnText" text="button" readyonly :disabled="btnType === 3" >
+    </div>
+    <div class="btn" v-if="btnType === 2" @click="nextAdDetail">
+      <input :style="btnDisabled ? 'background: #e8e8e8' : 'background:#fe7527'" class="input-btn" :value="btnText" text="button" readonly :disabled="btnDisabled">
+    </div>
+    <div class="btn" v-if="btnType === 4" @click="handleLottery">
+      <input class="input-btn" value="抽奖" text="button" readonly>
+    </div>
+    <div class="btn" v-if="btnType === 5" @click="handleShowProfit">
+      <input class="input-btn" value="领取收益" text="button" readonly>
+    </div>
+    <div class="btn">
+      <span v-if="showNice" class="tip-box">+{{profit}} DDO</span>
+    </div>
+    <submit-loading></submit-loading>
+  </div>
 </template>
 
 <script>
 /* eslint-disable */
 import MHeader from 'base/MHeader'
 import AdContent from 'base/Ad/AdContent'
+import SubmitLoading from 'base/SubmitLoading'
 import {mapGetters} from 'vuex'
 
 export default {
   name: 'AdDetail',
   components: {
     MHeader,
-    AdContent
+    AdContent,
+    SubmitLoading
   },
   props: ['id'],
   data() {
     return {
       showBack: true,
-      showIcon: true,
-      showTip: false,
-      count: 0,
-      profit: 0
+      flag: false, // 是否可点击
+      showNice: false,
+      profit: 0,
+      btnType: 0, // 1:进度按钮 2：下一条 3：广告已观看 4:抽奖 5：领取收益
+      btnText: '下一条',
+      btnDisabled: false,
+      plays: 0,
+      campaignNum: ''
     }
   },
   computed: {
+    options() {
+      return {
+        textColor: 'rgb(255,255,255)',
+        text: function(value) {
+          if (value !== 100) {
+            return `<span style="font-size:0.32rem;letter-spacing:1px;vertical-align: middle">挖金中</span>`
+          } else {
+            return `<span style="font-size: 0.32rem;letter-spacing:1px;vertical-align: middle">挖金完成</span>`
+          }
+        },
+        pathColors: ['#c5c5c5', '#fe7527'],
+        duration: 5000,
+        rectWidth: this.reactWidth,
+        rectHeight: this.reactHeight,
+        rectRadius: 5
+      }
+    },
+    reactWidth() {
+      return window.screen.width * 702 / 750
+    },
+    reactHeight() {
+      return window.screen.height * 88 / 1334
+    },
     ...mapGetters([
-      'flag',
       'machineNum',
-      'userId'
+      'userId',
+      'timer',
+      'activeIndex',
+      'adList'
     ])
   },
   mounted() {
-    this.getAdDetail()
-    this.$refs.scroll.refresh()
+    this.getAdDetail(this.id)
+  },
+  watch: {
+    timer(newVal) {
+      this.flag = newVal === 100
+      if (newVal === 100) {
+        this.submitAdDetail()
+      }
+    }
+  },
+  beforeRouteUpdate (to, from, next) {
+    const newId = to.params.id
+    next()
+    this.getAdDetail(newId)
   },
   beforeRouteLeave(to, from, next) {
-    // 导航离开该组件的对应路由时调用
-    // 可以访问组件实例 `this`
-    if (this.count !== 0) {
-      this.$dialog('提示', `广告还有${this.count}s播放完毕,请继续观看`, () => {
+    if (!this.flag && this.timer !== 100 && this.btnType === 1) {
+      this.$store.commit('SET_STOP', true)
+      this.$dialog('提示', `广告还没有播放完毕,请继续观看`, () => {
         next(false)
+        this.$store.commit('SET_STOP', false)
+        this.$store.dispatch('RunTimer')
       }, () => {
         next()
       })
@@ -69,72 +124,171 @@ export default {
     }
   },
   methods: {
-    timeLeft(count) {
-      this.count = count
-    },
-    closeTip() {
-      this.showTip = false
-      setTimeout(() => {
-        this.$router.push({
-          path: '/home'
-        })
-      }, 1000)
-    },
     handleBack() {
-      this.$router.back()
+      this.$router.replace({
+        path: '/home'
+      })
     },
-    handleIcon() {
-      console.log('分享')
-    },
-    onBeforeScrollHandle() {
-      this.$refs.scroll.refresh()
-    },
-    getAdDetail() {
-      this.$store.dispatch('GetAdDetail', this.id).then(res => {
+    getAdDetail(id) {
+      let machineNum = this.machineNum ? this.machineNum : ''
+      const params = {
+        advertId: id,
+        userId: this.userId,
+        machineNum: machineNum
+      }
+      this.$store.dispatch('GetAdDetail', params).then(res => {
         if (res.code === 0) {
           this.$toast(res.msg, 'warn')
+          setTimeout(() => {
+            this.$router.replace({
+              path: '/home'
+            })
+          }, 500)
           return
+        }
+        this.plays = res.result.plays
+        const watchNum = res.result.watchNum
+        this.campaignNum = res.result.campaignNum
+        this.btnType = watchNum ? 3 : 1
+        if (this.btnType === 1) {
+          this.flag = false
+          this.showNice = false
+          this.$store.commit('SET_START', 0)
+          this.$store.commit('SET_STOP', false)
+          this.$store.dispatch('RunTimer')
+        } else if (this.btnType === 3) {
+          this.btnText = '广告已观看'
         }
       }).catch(err => {
         console.log(err)
         this.$toast('获取广告详情失败', 'error')
       })
     },
-    submitAdDetail() {
-      if (!this.flag) {
-        this.$toast(`${this.count}s结束后可提交`, 'warn')
-        return
+    handleLottery() {
+      this.$store.dispatch('IsWinning', {advertId: this.id, userId: this.userId}).then(res => {
+        if (res.code === 0) {
+          this.$toast(res.msg, 'correct')
+          if (this.machineNum) {
+            this.$store.commit('SET_MACHINE_NUM', '')
+            setTimeout(() => {
+              this.$router.replace({
+                path: '/home'
+              })
+            }, 2000)
+          } else {
+            this.btnType = 2
+          }
+        } else {
+          this.$toast(res.msg, 'correct')
+          this.$store.commit('SET_WIN_RESULT', res.result)
+          this.$store.commit('SET_MACHINE_NUM', '')
+          setTimeout(() => {
+            this.$router.replace({
+              path: '/winning'
+            })
+          }, 500)
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    nextAdDetail() {
+      console.log(this.activeIndex, this.adList.length)
+      let adLen = this.adList.length - 1
+      if (this.activeIndex === adLen) {
+        this.btnText = '这是最后一条'
+        this.btnDisabled = true
+      } else {
+        let nextIndex = this.activeIndex + 1
+        this.$store.commit('SET_ACTIVE_INDEX', nextIndex)
+        this.btnText = '下一条'
+        this.btnDisabled = false
+        let adId = this.adList[nextIndex].advertId
+        this.$router.replace({
+          path: `/ad/${adId}`
+        })
       }
-      if (this.machineNum && this.machineNum !== '123456') {
+    },
+    onBeforeScrollHandle() {
+      this.$refs.scroll.refresh()
+    },
+    handleShowProfit() {
+      if (this.machineNum) {
+        this.showNice = true
+        if (this.campaignNum) {
+          setTimeout(() => {
+            this.btnType = 4
+          }, 3000)
+        } else {
+          setTimeout(() => {
+            this.$store.commit('SET_MACHINE_NUM', '')
+            this.$router.replace({
+              path: '/home'
+            })
+          }, 3000)
+        }
+      }
+    },
+    submitAdDetail() {
+      this.$store.commit('SET_SUBLOADING', true)
+      if (this.machineNum) {
         const params = {
           machineNum: this.machineNum,
           userId: this.userId,
           advertId: this.id
         }
         this.$store.dispatch('SubmitScanAdDetail', params).then(res => {
+          this.$store.commit('SET_SUBLOADING', false)
           if (res.code === 0) {
             this.$toast(res.msg, 'warn')
+            setTimeout(() => {
+              this.$store.commit('SET_MACHINE_NUM', '')
+              this.$router.replace({
+                path: '/home'
+              })
+            }, 500)
             return
           }
-          let result = res.result
-          this.profit = result
-          this.showTip = true
+          this.profit = res.result
+          this.plays++
+          this.btnType = 5
         }).catch(err => {
+          this.$store.commit('SET_SUBLOADING', false)
           console.log(err)
-          this.$toast('提交失败', 'error')
+          this.$toast('网络超时', 'error')
         })
       } else {
         this.$store.dispatch('SubmitAdDetail', this.id).then(res => {
+          this.$store.commit('SET_SUBLOADING', false)
           if (res.code === 0) {
             this.$toast(res.msg, 'warn')
+            if (this.campaignNum) {
+              setTimeout(() => {
+                this.btnType = 4
+              }, 500)
+            } else {
+              setTimeout(() => {
+                this.btnType = 2
+              }, 500)
+            }
             return
           }
-          let result = res.result
-          this.profit = result
-          this.showTip = true
+          this.profit = res.result
+          this.showNice = true
+          this.plays++
+          if (this.campaignNum) {
+            setTimeout(() => {
+              this.btnType = 4
+            }, 3000)
+          } else {
+            setTimeout(() => {
+              this.btnType = 2
+            }, 3000)
+          }
         }).catch(err => {
+          this.$store.commit('SET_SUBLOADING', false)
           console.log(err)
-          this.$toast('提交失败', 'error')
+          this.$toast('网络超时', 'error')
         })
       }
     }
@@ -147,52 +301,10 @@ export default {
 @import '~common/stylus/mixin'
 
 .ad-detail
-  .mask
-    position: fixed 
-    z-index: 999
-    top: 0
-    left: 0
-    right: 0
-    bottom: 0
-    background: rgba(0,0,0,0.7)
-    overflow: hidden
-    display: flex
-    flex-direction: column
-    align-items: center
-    justify-content: center
-    .tip-box
-      position: relative
-      width: 5.7rem
-      height: 6.14rem
-      background: #ff0000
-      border-radius: 0.1rem
-      background: url(../../common/image/wk_success.jpg) no-repeat center center
-      background-size: cover
-      .context
-        margin-top: 4.6rem
-        font-size: 0.26rem
-        color: #fff
-        text-align: center
-    .button
-      display: block
-      width: 3.16rem
-      height: 0.7rem
-      text-align: center
-      line-height: 0.7rem
-      border: 1px solid $color-theme
-      box-sizing: border-box
-      border-radius: 0.35rem
-      font-size: 0.3rem
-      color: $color-theme
-      background: #edf4fd
-      margin: 1.04rem auto
-      &:active
-        background: $color-theme
-        color: #fff
   .content
     position: absolute
     top: 0.88rem
-    bottom: 1rem
+    bottom: 1.2rem
     left: 0
     right: 0
     overflow: hidden
@@ -202,11 +314,63 @@ export default {
     right: 0
     bottom: 0
     z-index: 9
-    background: $color-theme
-    color: #ffffff
-    height: 1rem
-    line-height: 1rem
-    text-align: center
-    font-size: 0.32rem
+    padding: 0 0.24rem
+    .tip-box
+      position: absolute 
+      top: 0
+      left: 50%
+      animation: niceIn 3s ease-in-out
+      font-size: 0.24rem
+      color: $color-theme
+      transform: translateX(-50%)
+    .input-btn
+      height: 0.88rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 0.16rem;
+      font-size: 0.32em;
+      text-align: center;
+      background: #fe7527;
+      color: #fff;
+      border-radius: 5px;
+      letter-spacing: 1px;
+  .btn-disabled
+    position: absolute 
+    left: 0
+    right: 0
+    bottom: 0
+    height: 1.1rem
+    z-index: 10
+    padding: 0 0.24rem
+
+@keyframes niceIn{
+  0%{
+    opacity: 0;
+    top: 0;
+    font-size: 0.2rem;
+  }
+  25%{
+    opacity: 0.5
+    top: -1.5rem;
+    font-size: 0.3rem;
+  }
+  50%{
+    opacity: 0.75
+    top: -2rem;
+    font-size: 0.5rem;
+  }
+  75%{
+    opacity: 1;
+    top: -2rem;
+    font-size: 0.5rem;
+  }
+  100%{
+    opacity: 0;
+    top: -2rem;
+    font-size: 0.5rem;
+  }
+}
 </style>
 
